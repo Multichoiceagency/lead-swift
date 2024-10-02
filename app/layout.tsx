@@ -1,13 +1,18 @@
-// app/layout.tsx
-import './globals.css';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { Toaster } from '@/components/ui/toaster';
+import { ClerkProvider } from '@clerk/nextjs';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { AuthProvider } from '../context/authContext';
+import NextTopLoader from 'nextjs-toploader';
+
+import './globals.css';
+import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
-  title: 'Your App Name',
-  description: 'Description of your app',
+export const metadata: Metadata = {
+  title: 'Next Form',
+  description: 'Next form is a form builder can drag and drop to build form',
 };
 
 export default function RootLayout({
@@ -16,10 +21,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="nl">
-      <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="en"
+        suppressHydrationWarning>
+        <body className={cn(inter.className)}>
+          <NextTopLoader
+            showSpinner={false}
+          />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange>
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
